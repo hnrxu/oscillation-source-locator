@@ -1,4 +1,5 @@
 import math
+from matplotlib import pyplot as plt
 import numpy as np
 
 
@@ -12,17 +13,22 @@ def generate_times(f1, samples_per_cycle, num_cycles):
 
 def generate_test(f1, fos, amplitudes, angles, samples_per_cycle, num_cycles):
 
-    freqs = [f1, f1+fos, f1-fos]
+    freqs = [f1, f1-fos, f1+fos]
     times = generate_times(f1, samples_per_cycle, num_cycles)
     v = 0
     for i in range(len(freqs)):
         w = 2*np.pi*freqs[i]
-        v += amplitudes[i] * np.cos(w*times + angles[i])
+        v += amplitudes[i] * np.cos(w*times + np.radians(angles[i]))
 
+    
     #plt.plot(times, v)
     #plt.show()
 
     return f1, v, times
+
+def generate_phasor_times(f1, num_cycles, start_offset=0):
+    return start_offset + np.arange(num_cycles) * (1/f1)
+
 
 def generate_phasor(f1, data, times, samples_per_cycle):
     phasor = []   
@@ -44,8 +50,8 @@ def generate_phasor(f1, data, times, samples_per_cycle):
 
     # for x in phasor:
     #     print(x.real, x.imag)
-    #plt.plot(magnitudes, marker = 'o')
-    #plt.show()
+    # plt.plot(magnitudes, marker = 'o')
+    # plt.show()
     # print(magnitudes)
     # print(angles)
     return magnitudes, angles
