@@ -1,0 +1,112 @@
+import io
+import numpy as np
+import pandas as pd
+
+
+def write_excel(times, magnitudes_v, angles_v, magnitudes_i, angles_i):
+    #using temp var names, prob change later
+    df = pd.DataFrame({
+        'Time': times,
+        'MVa': magnitudes_v,
+        'MIa': magnitudes_i,
+        'AVa': np.degrees(angles_v),
+        'AIa': np.degrees(angles_i)
+    })
+
+    df.to_excel('test_input.xlsx', index=False)
+
+def write_excel_power(s1, p1, sih1, pih1, sih2, pih2):
+    #using temp var names, prob change later
+    df = pd.DataFrame({
+        'S1': s1,
+        'Sih1': sih1,
+        'Sih2': sih2,
+        'P1': p1,
+        'Pih1': pih1,
+        'Pih2': pih2,
+    })
+
+    df.to_excel('power_output.xlsx', index=False)
+
+
+# def read_excel(file_name):
+#     #using temp var names, prob change later
+#     df = pd.read_excel(file_name)
+#     #drop nan rows
+#     df = df.dropna()
+#     magnitudes_v = df['MVa'].to_numpy()
+#     magnitudes_i = df['MIa'].to_numpy()
+#     angles_v = np.radians(df['AVa'].to_numpy())
+#     angles_i = np.radians(df['AIa'].to_numpy())
+#     times = df['Time'].to_numpy()
+#     return magnitudes_v, magnitudes_i, angles_v, angles_i, times
+
+
+def read_locations(df):
+
+    locations = df.iloc[0]
+    locations = locations.dropna().unique()
+    locations = [l for l in locations if l != 'Time']  
+    return locations
+
+def read_excel(df, start, t_start = 0, t_end = None):
+
+    df_data = df.iloc[5:]
+    df_data = df_data.dropna()
+    
+    # get correct block of time
+    times = df_data.iloc[:, 0].astype(float).to_numpy()
+    t_start_idx = np.argmin(np.abs(times - t_start))
+    if t_end is not None:
+        t_end_idx = np.argmin(np.abs(times - t_end))
+        times = times[t_start_idx:t_end_idx+1]
+        data = df_data.iloc[t_start_idx:t_end_idx+1, start:start+5]
+    else:
+        times = times[t_start_idx:]
+        data = df_data.iloc[t_start_idx:, start:start+5]
+
+
+    f1_col = data.iloc[:, 0].astype(float).to_numpy()
+    magnitudes_v = data.iloc[:, 1].astype(float).to_numpy()
+    angles_v = data.iloc[:, 2].astype(float).to_numpy()
+    magnitudes_i = data.iloc[:, 3].astype(float).to_numpy()
+    angles_i = data.iloc[:, 4].astype(float).to_numpy()
+    if len(f1_col) == 0 or len(magnitudes_v) == 0 or len(angles_v) == 0 or len(magnitudes_i) == 0 or len(angles_i) == 0:
+        raise ValueError("No valid rows after cleaning data. Please check that data has no extra columns/unusual structure")
+    
+    return f1_col, magnitudes_v, magnitudes_i, angles_v, angles_i, times
+
+def write_output_excel(output_dict, filename):
+    columns = []
+    data_columns = []
+    for location, data_dict in output_dict.items():
+        for key, values in data_dict.items():
+            columns.append((location, key))
+            data_columns.append(values)
+
+    header = pd.MultiIndex.from_tuples(columns, names=['Location', 'Signal'])
+    df = pd.DataFrame(np.array(data_columns).T, columns=header)
+    df.to_excel(filename, index=True)
+
+def dict_to_df(output_dict):
+    header_data = []
+    column_data = []
+    for location, data_dict in output_dict.items():
+        for label, data in data_dict.items():
+            header_data.append((location, label))
+            column_data.append(data)
+    
+    headers = pd.MultiIndex.from_tuples(header_data, names = ['Location', 'Signal'])
+    columns = np.array(column_data).T
+    df = pd.DataFrame(columns, columns=headers)
+
+    return df
+
+def write_output(output_v, output_i, output_s):
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        dict_to_df(output_v).to_excel(writer, sheet_name='Voltage', index=True)
+        dict_to_df(output_i).to_excel(writer, sheet_name='Current', index=True)
+        dict_to_df(output_s).to_excel(writer, sheet_name='Power', index=True)
+    buffer.seek(0)
+    return buffer
