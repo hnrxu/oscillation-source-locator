@@ -22,7 +22,7 @@ def calculate_power(amps_f1_v, amps_f1_i, angs_f1_v, angs_f1_i,
     angle_diff_rad = np.radians(np.array(angs_ih2_v) - np.array(angs_ih2_i))
     pih2 = sih2 * np.cos(angle_diff_rad)
     qih2 = sih2 * np.sin(angle_diff_rad)
-    return sf1, sih1, sih2, pf1, pih1, pih2, qf1, qih1, qih2
+    return sf1.tolist(), sih1.tolist(), sih2.tolist(), pf1.tolist(), pih1.tolist(), pih2.tolist(), qf1.tolist(), qih1.tolist(), qih2.tolist()
 
 
 def percent_error_per_point(calculated, verified):

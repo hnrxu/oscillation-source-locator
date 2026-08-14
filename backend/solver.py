@@ -44,66 +44,34 @@ def detect_fos(column, location, times):
     max_mag = mags[idx] / np.mean(column)
 
 
-    plt.figure()
-    plt.bar(range(len(mags[1:250])), mags[1:250])   # only show first 250 bins
-    plt.xlabel('Frequency index')
-    plt.ylabel('Magnitude')
-    plt.title(f'fft magnitudes - {location}')
-    plt.savefig(f'fft_{location}.png')
-    plt.close()
-
-    print(f"{location} - {freqs[idx]}")
-    print(f'{cutoff_index}')
-    print(f"[{location}] index of that max: {np.argmax(mags[cutoff_index:])+cutoff_index}")
-    print(f"[{location}] normalized max = {max_mag}")
-    print(f"[{location}] - {num_cycles}")
-
-    # # require at least 2 repeats to even consider this a "real" period
-    # if num_cycles > len(column) / 2:
-    #     return (-np.inf, None)
-
-    return (max_mag, num_cycles, period)
+    return (max_mag, num_cycles, period, mags, freqs)
 
 def detect_max_fos(locations, cached_data):
     max_mag = -np.inf
     best_num_cycles = None
     best_period = None
-    mags = []
-    cycles = []
+    best_mags = []
+    best_freqs = []
+    best_location = None
     for i in range(len(locations)):
         start = i*5 + 1
         f1_freqs, phasor_mags_v, phasor_mags_i, phasor_angs_v, phasor_angs_i, times = cached_data[i]
         phasor_mags_v = phasor_mags_v.astype(float)
-        mag, num_cycles, period = detect_fos(phasor_mags_v, locations[i], times)
-        mags.append(mag)
-        cycles.append(num_cycles)
+        mag, num_cycles, period, fft_mags, fft_freqs = detect_fos(phasor_mags_v, locations[i], times)
+      
         if mag > max_mag:
             max_mag = mag
             best_num_cycles = num_cycles
             best_period = period
+            best_mags = fft_mags
+            best_freqs = fft_freqs
+            best_location = locations[i]
 
-
-    plt.figure(figsize=(14, 6))
-    bars = plt.bar(range(len(mags)), mags)
-
-    for idx, (bar, cycles) in enumerate(zip(bars, cycles)):
-        height = bar.get_height()
-        label = f"{cycles:.1f}" if cycles is not None else "N/A"
-        plt.text(bar.get_x() + bar.get_width()/2, height,
-                  label, ha='center', va='bottom', fontsize=7, rotation=90)
-
-    plt.xlabel('Location')
-    plt.ylabel('Magnitude')
-    plt.title('FFT best magnitudes (labeled with detected num_cycles)')
-    plt.xticks(range(len(locations)), locations, rotation=90, fontsize=6)
-    plt.tight_layout()
-    plt.savefig('fft_best_mags.png')
 
     if best_num_cycles is None or best_period is None:
         raise ValueError("No valid oscillation detected in any location")
-    print(round(best_num_cycles))
 
-    return round(best_num_cycles), best_period
+    return round(best_num_cycles), best_period, best_mags, best_freqs, best_location
 
 
 
@@ -204,8 +172,8 @@ def solve(f1, fos, phasor, times, samples_per_cycle, m = 128/2):
     for i in range(0, len(x), 2):
         v = np.sqrt(x[i]**2 + x[i+1]**2)
         theta = np.arctan2(-x[i+1], x[i])
-        amplitudes.append(v)
-        angles.append(theta)
+        amplitudes.append(float(v))
+        angles.append(float(np.degrees(theta)))
 
     # calculated
     return amplitudes, np.degrees(angles)
