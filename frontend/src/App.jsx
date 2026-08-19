@@ -44,7 +44,7 @@ function App() {
     setProcessing(true)
     setActiveTab('detection')
 
-    const ws = new WebSocket('ws://oscillation-source-locator-production.up.railway.app/ws/interharmonics')
+    const ws = new WebSocket('wss://oscillation-source-locator-production.up.railway.app/ws/interharmonics')
 
     ws.onopen = () => {
       // send params
