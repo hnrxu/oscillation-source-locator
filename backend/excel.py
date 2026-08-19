@@ -42,6 +42,7 @@ def write_excel_power(s1, p1, sih1, pih1, sih2, pih2):
 #     return magnitudes_v, magnitudes_i, angles_v, angles_i, times
 
 
+
 def read_locations(df):
 
     locations = df.iloc[0]
@@ -88,6 +89,42 @@ def write_output_excel(output_dict, filename):
     df = pd.DataFrame(np.array(data_columns).T, columns=header)
     df.to_excel(filename, index=True)
 
+
+def validate_structure(df):
+    if df.shape[0] < 6:
+        raise ValueError("File has too few rows.")
+    if df.shape[1] < 6:
+        raise ValueError("File has too few columns.")
+    
+    # verify column 0 is Time column
+    time_header = df.iloc[0, 0]
+    if pd.isna(time_header) or 'time' not in str(time_header).lower():
+        raise ValueError(f"Missing time column as column 1.")
+
+    # checks if signals are correct
+    signal_row = df.iloc[2]
+    expected_signals = {'F', 'VM', 'VA', 'IM', 'IA'}
+    actual_signals = set(signal_row.dropna().astype(str).unique())
+    if not expected_signals.issubset(actual_signals):
+        raise ValueError(f"Unexpected column structure in row 3.")
+
+    data_cols = df.shape[1] - 1  # checks if data comes in sets of 5exluding time
+    if data_cols % 5 != 0:
+        raise ValueError(f"Column count doesn't follow structure requirements.")
+    
+    # check that data values are numeric
+    data_rows = df.iloc[5:] 
+    for col in range(df.shape[1]): 
+        col_values = data_rows.iloc[:, col].dropna()
+        if len(col_values) == 0:
+            continue
+        try:
+            pd.to_numeric(col_values)
+        except (ValueError, TypeError):
+            raise ValueError(f"Column {col} contains non-numeric values in its data rows.")
+
+    
+
 def dict_to_df(output_dict):
     header_data = []
     column_data = []
@@ -102,11 +139,16 @@ def dict_to_df(output_dict):
 
     return df
 
-def write_output(output_v, output_i, output_s):
+def params_to_df(params):
+    return pd.DataFrame([params])
+
+def write_output(output_v, output_i, output_s, params):
     buffer = io.BytesIO()
     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
         dict_to_df(output_v).to_excel(writer, sheet_name='Voltage', index=True)
         dict_to_df(output_i).to_excel(writer, sheet_name='Current', index=True)
         dict_to_df(output_s).to_excel(writer, sheet_name='Power', index=True)
+        params_to_df(params).to_excel(writer, sheet_name='Params', index=False)
     buffer.seek(0)
     return buffer
+

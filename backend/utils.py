@@ -36,10 +36,17 @@ def nrmse(calculated, verified, nominal):
     rmse = np.sqrt(np.mean((calculated - verified)**2))
     return rmse / nominal * 100
 
-def rmse_angle_deg(calculated, verified):
+def rmse_angle_percent(calculated, verified):
     diff = (np.array(calculated) - np.array(verified) + 180) % 360 - 180
-    return np.sqrt(np.mean(diff**2))
+    rmse = np.sqrt(np.mean(diff**2)) / 360
+    return rmse * 100
 
 def mape(true, estimated):
     true, estimated = np.array(true), np.array(estimated)
     return np.mean(np.abs((true - estimated) / true)) * 100
+
+
+def safe_convert(value, converter, default):
+    if value is None or value == '':
+        return default
+    return converter(value)

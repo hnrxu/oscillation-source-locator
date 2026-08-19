@@ -19,7 +19,7 @@ import backend.config as config
 # M = 63.46752
 # target_offset_seconds = M * ((1/60.03337057912106)/128)
 # m_for_dynamic = target_offset_seconds / ((1/60.03337057912106)/SAMPLES_PER_CYCLE)
-# #TODO:: m changes with samples
+
 
 # delta_t = (1/60)/128
 # offset_seconds = 32 * delta_t 

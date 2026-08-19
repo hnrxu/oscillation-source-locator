@@ -1,11 +1,11 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
-from backend.excel import read_excel
-from backend.test_setup import generate_times
+from excel import read_excel
+from test_setup import generate_times
 from scipy.signal import find_peaks
 from scipy.signal import detrend
-import backend.config as config
+import config 
 
 # def detect_beat_cycles(column):
 #     segment = column - column.mean()
@@ -176,4 +176,4 @@ def solve(f1, fos, phasor, times, samples_per_cycle, m = 128/2):
         angles.append(float(np.degrees(theta)))
 
     # calculated
-    return amplitudes, np.degrees(angles)
+    return amplitudes, angles
