@@ -103,7 +103,7 @@ async def generate_output(websocket: WebSocket):
         print(f"[{time.time()}] sending fft_chart", flush=True)
         await websocket.send_json({'type': 'fft_chart', 'data': fft_data})
         print(f"[{time.time()}] sent fft_chart", flush=True)
-        await asyncio.sleep(0)
+        await asyncio.sleep(0.5)
 
 
 
