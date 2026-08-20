@@ -56,14 +56,24 @@ async def generate_output(websocket: WebSocket):
         output_s = {}
         locations = read_locations(input_df)
 
+        print(f"[{time.time()}] starting cached_data build", flush=True)
         cached_data = {}
         for i in range(len(locations)):
             start = i*5 + 1
             cached_data[i] = read_excel(input_df, start, start_time, end_time)
+        
+        import time
+        print(f"[{time.time()}] finished cached_data build", flush=True)
+
+       
+
+       
 
 
         # finding highest fos from all locations
+        print(f"[{time.time()}] starting detect_max_fos", flush=True)
         num_cycles, beat_period, best_mags, best_freqs, best_location = detect_max_fos(locations, cached_data)
+        print(f"[{time.time()}] finished detect_max_fos", flush=True)
 
         # send best oscillation segment to front
         best_index = locations.index(best_location)
@@ -74,14 +84,22 @@ async def generate_output(websocket: WebSocket):
             'voltage': phasor_mags_v.tolist(),
             'location': best_location
         }
+
+        print(f"[{time.time()}] sending segment_chart", flush=True)
         await websocket.send_json({'type': 'segment_chart', 'data': segment_data})
+        print(f"[{time.time()}] sent segment_chart", flush=True)
+        
+
         fft_data = {
             'frequencies': best_freqs.tolist(),
             'magnitudes': best_mags.tolist(),
             'location': best_location,
             'fos': 1/beat_period
         }
+
+        print(f"[{time.time()}] sending fft_chart", flush=True)
         await websocket.send_json({'type': 'fft_chart', 'data': fft_data})
+        print(f"[{time.time()}] sent fft_chart", flush=True)
 
 
 
