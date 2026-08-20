@@ -18,7 +18,7 @@ function App() {
   const [upload, setUpload] = useState(null)
   const [downloadUrl, setDownloadUrl] = useState(null)
   const [timestamp, setTimestamp] = useState('middle')
-  const [numSamples, setNumSamples] = useState(128)
+  const [numSamples, setNumSamples] = useState(32)
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(null)
   const [segmentData, setSegmentData] = useState(null)
@@ -149,7 +149,7 @@ function App() {
 
                 <div className="field">
                     <label className="field-label">Sampling rate</label>
-                    <input type="number" value={numSamples} placeholder={'Default: 128'} onChange={e => { setNumSamples(e.target.value) }} />
+                    <input type="number" value={numSamples} placeholder={'Default: 32'} onChange={e => { setNumSamples(e.target.value) }} />
                 </div>
 
             </div>
@@ -203,7 +203,7 @@ function App() {
             {downloadUrl && (
                 <div className="download-row">
                 <a className="download-link" href={downloadUrl} download="interharmonics_results.xlsx">
-                    Download Detailed Results
+                    Download Results
                 </a>
                 </div>
             )}

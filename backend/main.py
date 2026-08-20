@@ -312,7 +312,9 @@ async def generate_output(websocket: WebSocket):
             'Start time': start_time,
             'End time': end_time,
             'Timestamp': timestamp,
-            'Sampling rate': num_samples
+            'Sampling rate': num_samples,
+            'Fos': 1/beat_period,
+            'Fos location': best_location
         }
         output_final = write_output(output_v, output_i, output_s, params_data)
         await websocket.send_bytes(output_final.read())
@@ -333,9 +335,8 @@ async def generate_output(websocket: WebSocket):
 
 
 # uvicorn main:app --reload
-# exceptions
-
-
+# test exceptions:
+# not enough data/beat period
             
 
 

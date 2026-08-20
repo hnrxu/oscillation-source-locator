@@ -15,12 +15,14 @@ const selectStyle = {
 
 const controlLabelStyle = {
   fontFamily: 'var(--mono)',
-  fontSize: '10px',
-  letterSpacing: '0.06em',
+  fontSize: '11px',
+  letterSpacing: '0.03em',
   textTransform: 'uppercase',
-  color: 'var(--text-faint)',
+  color: 'var(--accent)',
   marginBottom: '6px',
+  marginTop: '6px',
   display: 'block',
+  fontWeight: 450,
 }
 
 function IhChart({ ihData }) {

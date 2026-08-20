@@ -224,10 +224,11 @@ body {
 
 .field-label {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--accent);
+  font-weight: 450
 }
 
 .field select,
@@ -311,7 +312,7 @@ body {
   font-size: 10.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--text-faint);
   margin: 0 0 4px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border);

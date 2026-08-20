@@ -106,7 +106,7 @@ def validate_structure(df):
     expected_signals = {'F', 'VM', 'VA', 'IM', 'IA'}
     actual_signals = set(signal_row.dropna().astype(str).unique())
     if not expected_signals.issubset(actual_signals):
-        raise ValueError(f"Unexpected column structure in row 3.")
+        raise ValueError(f"Unexpected column structure in row 2.")
 
     data_cols = df.shape[1] - 1  # checks if data comes in sets of 5exluding time
     if data_cols % 5 != 0:
