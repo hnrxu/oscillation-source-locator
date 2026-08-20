@@ -30,8 +30,9 @@ function FftChart({ fftData }) {
         style={{
           fontFamily: 'var(--mono)',
           fontSize: '11.5px',
-          color: 'var(--text)',
+          color: 'var(--accent)',
           margin: '0 0 0px',
+          fontWeight: 500,
         }}
       >
         fos ≈ {fftData.fos.toFixed(3)} Hz
