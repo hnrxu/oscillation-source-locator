@@ -65,6 +65,7 @@ function App() {
           setSegmentData(response.data)
         } else if (response.type === 'fft_chart') {
           setFftData(response.data)
+          console.log('fft data received')
         } else if (response.type === 'ih_chart') {
           setIhData(response.data)
           setActiveTab('results')

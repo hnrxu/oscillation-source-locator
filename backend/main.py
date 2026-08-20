@@ -1,3 +1,4 @@
+import asyncio
 import io
 from fastapi import FastAPI, File, Form, UploadFile, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -102,6 +103,7 @@ async def generate_output(websocket: WebSocket):
         print(f"[{time.time()}] sending fft_chart", flush=True)
         await websocket.send_json({'type': 'fft_chart', 'data': fft_data})
         print(f"[{time.time()}] sent fft_chart", flush=True)
+        await asyncio.sleep(0)
 
 
 
