@@ -7,7 +7,7 @@ function FftChart({ fftData }) {
   const chartData = fftData.frequencies.slice(0, BIN_LIMIT).map((freq, i) => ({
     frequency: freq.toFixed(2),
     magnitude: fftData.magnitudes[i].toFixed(2)
-  }))
+  })).filter(freq => freq >= 0.1)
 
 
   // avoid a wall of unreadable x-axis labels when there are many bins

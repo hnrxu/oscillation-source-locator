@@ -35,12 +35,14 @@ def detect_fos(column, location, times):
 
     freqs = np.fft.rfftfreq(len(segment), d=delta_t)
     raw_mags = np.abs(fft) / np.mean(column) 
-    # normalize as percentage out of max
-    mags = raw_mags / raw_mags[idx] * 100
+    
 
     cutoff_index = np.argmin(np.abs(freqs - config.SPECTRAL_CUTOFF_HZ))
     idx = np.argmax(mags[cutoff_index:]) + cutoff_index
+    # normalize as percentage out of max
+    mags = raw_mags / raw_mags[idx] * 100
     period = 1/freqs[idx]
+    
     f_period = 1/60
     num_cycles = period/f_period
     max_mag = mags[idx] / np.mean(column)
