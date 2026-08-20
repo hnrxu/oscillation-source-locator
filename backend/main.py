@@ -81,10 +81,8 @@ def process_location(cached_data,
 
 
         times_data = times[phasor_start_idx: phasor_end_idx]
-        f1_freqs_data = f1_freqs[phasor_start_idx: phasor_end_idx]
-        f1 = np.mean(f1_freqs_data) 
 
-        amplitudes_v, angles_v = solve(f1, f1/num_cycles, phasor_data, times_data, num_samples, m)
+        amplitudes_v, angles_v = solve(config.F1, config.F1/num_cycles, phasor_data, times_data, num_samples, m)
 
         amp_f1_v, amp_ih1_v, amp_ih2_v = amplitudes_v
         ang_f1_v, ang_ih1_v, ang_ih2_v = angles_v
@@ -137,12 +135,17 @@ def process_location(cached_data,
         if j >= times[len(times)-1] // beat_period:
             break
 
+        if len(phasor_data) * 2 < config.MIN_NUM_DATA:
+            raise ValueError(
+                f"Not enough data to solve reliably. "
+                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period)."
+            )
+
 
         times_data = times[phasor_start_idx: phasor_end_idx]
-        f1_freqs_data = f1_freqs[phasor_start_idx: phasor_end_idx]
-        f1 = np.mean(f1_freqs_data) 
+  
 
-        amplitudes_i, angles_i = solve(f1, f1/num_cycles, phasor_data, times_data, num_samples, m)
+        amplitudes_i, angles_i = solve(config.F1, config.F1/num_cycles, phasor_data, times_data, num_samples, m)
         
         amp_f1_i, amp_ih1_i, amp_ih2_i = amplitudes_i
         ang_f1_i, ang_ih1_i, ang_ih2_i = angles_i
@@ -218,9 +221,9 @@ async def generate_output(websocket: WebSocket):
         contents = await websocket.receive_bytes()
 
         timestamp = params.get('timestamp', 'middle')
-        num_samples = safe_convert(params.get('num_samples'), int, 128)
-        start_time = safe_convert(params.get('start_time'), float, 0)
-        end_time = safe_convert(params.get('end_time'), float, None)
+        num_samples = safe_convert(params.get('num_samples'), int, config.NUM_SAMPLES)
+        start_time = safe_convert(params.get('start_time'), float, config.T_START)
+        end_time = safe_convert(params.get('end_time'), float, config.T_END)
 
         input_df = pd.read_excel(io.BytesIO(contents), header=None)
         validate_structure(input_df)
@@ -330,6 +333,7 @@ async def generate_output(websocket: WebSocket):
 
 
 # uvicorn main:app --reload
+# exceptions
 
 
             

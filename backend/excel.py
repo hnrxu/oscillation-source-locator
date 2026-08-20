@@ -52,7 +52,7 @@ def read_locations(df):
 
 def read_excel(df, start, t_start = 0, t_end = None):
 
-    df_data = df.iloc[5:]
+    df_data = df.iloc[4:]
     df_data = df_data.dropna()
     
     # get correct block of time
@@ -91,7 +91,7 @@ def write_output_excel(output_dict, filename):
 
 
 def validate_structure(df):
-    if df.shape[0] < 6:
+    if df.shape[0] < 5:
         raise ValueError("File has too few rows.")
     if df.shape[1] < 6:
         raise ValueError("File has too few columns.")
@@ -102,7 +102,7 @@ def validate_structure(df):
         raise ValueError(f"Missing time column as column 1.")
 
     # checks if signals are correct
-    signal_row = df.iloc[2]
+    signal_row = df.iloc[1]
     expected_signals = {'F', 'VM', 'VA', 'IM', 'IA'}
     actual_signals = set(signal_row.dropna().astype(str).unique())
     if not expected_signals.issubset(actual_signals):
@@ -113,7 +113,7 @@ def validate_structure(df):
         raise ValueError(f"Column count doesn't follow structure requirements.")
     
     # check that data values are numeric
-    data_rows = df.iloc[5:] 
+    data_rows = df.iloc[4:] 
     for col in range(df.shape[1]): 
         col_values = data_rows.iloc[:, col].dropna()
         if len(col_values) == 0:
