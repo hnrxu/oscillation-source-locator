@@ -68,6 +68,8 @@ function App() {
         } else if (response.type === 'ih_chart') {
           setIhData(response.data)
           setActiveTab('results')
+        } else if (response.type === 'progress') {
+          console.log('done' + response.location)
         }
         // binary data -- returned excel
       } else {

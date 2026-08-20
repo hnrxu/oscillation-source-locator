@@ -262,6 +262,8 @@ async def generate_output(websocket: WebSocket):
             output_i[locations[i]] = data_i
             output_s[locations[i]] = data_s
 
+            await websocket.send_json({'type': 'progress', 'location': locations[i], 'done': i+1, 'total': len(locations)})
+
         
         # write_output_excel(output_v, 'voltage_output.xlsx')
         # write_output_excel(output_i, 'current_output.xlsx')
@@ -283,7 +285,7 @@ async def generate_output(websocket: WebSocket):
         output_final = write_output(output_v, output_i, output_s, params_data)
         await websocket.send_bytes(output_final.read())
    
-   
+
     except ValueError as e:
         await websocket.send_json({'type': 'error', 'message': str(e)})
     except Exception as e:
