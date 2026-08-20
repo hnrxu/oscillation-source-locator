@@ -182,12 +182,12 @@ function App() {
         {activeTab === 'detection' && (
             <div className="results-section">
             <div className="chart-panel">
-                <h3 className="chart-panel-title">Strongest Oscillation Location</h3>
+                <h3 className="chart-panel-title">Phasor Magnitude of Strongest Oscillation</h3>
                 {segmentData ? <SegmentChart segmentData={segmentData} /> : <div className="chart-loading"><Spinner /></div>}
             </div>
 
             <div className="chart-panel">
-                <h3 className="chart-panel-title">FFT Spectrum </h3>
+                <h3 className="chart-panel-title">FFT Spectrum of the above signal</h3>
                 {fftData ? <FftChart fftData={fftData} /> : <div className="chart-loading"><Spinner /></div>}
             </div>
             </div>

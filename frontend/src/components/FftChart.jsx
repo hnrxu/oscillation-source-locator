@@ -61,7 +61,7 @@ function FftChart({ fftData }) {
             domain={['dataMin', 'dataMax']}
             width={44}
             label={{
-              value: 'Magnitude',
+              value: 'Magnitude (%)',
               angle: -90,
               position: 'insideLeft',
               fill: 'var(--text-faint)',
