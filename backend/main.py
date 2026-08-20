@@ -56,13 +56,15 @@ async def generate_output(websocket: WebSocket):
         output_s = {}
         locations = read_locations(input_df)
 
+        import time
+
         print(f"[{time.time()}] starting cached_data build", flush=True)
         cached_data = {}
         for i in range(len(locations)):
             start = i*5 + 1
             cached_data[i] = read_excel(input_df, start, start_time, end_time)
         
-        import time
+        
         print(f"[{time.time()}] finished cached_data build", flush=True)
 
        
