@@ -134,28 +134,32 @@ def detect_max_fos(locations, cached_data):
 
 
 
-def solve(f1, fos, phasor, times, samples_per_cycle, m = 128/2):
+def solve(f1, fos, phasor, times, samples_per_cycle, m=128/2):
     freqs = [f1, f1-fos, f1+fos]
-    weights = np.ones(len(times)*samples_per_cycle)
+    num_blocks = len(phasor)
+    delta_t = (1/f1)/samples_per_cycle
 
-    # making the eq matrix
+    weights = np.ones((num_blocks, samples_per_cycle))
+    gain = weights.sum(axis=1)  # per-block gain, shape (num_blocks,)
+
+    i_arr = np.arange(samples_per_cycle)
+    t_i = i_arr * delta_t  # time-within-cycle for each sample, shape (samples_per_cycle,)
+
+    times = np.asarray(times)
+    shifted_times = times - m * delta_t  # per-block time offset, shape (num_blocks,)
+
+    # T[k, i] = i*delta_t + times[k] - m*delta_t, for every block k and sample i at once
+    T = shifted_times[:, None] + t_i[None, :]  # shape (num_blocks, samples_per_cycle)
+
     columns = []
     for f in freqs:
-        column_cos = []
-        column_sin = []
-        for k in range(len(phasor)):
-            #k is the "block" num
+        phase = 2 * np.pi * f * T
+        carrier = np.exp(-1j * 2 * np.pi * f1 * T)
+        cos_term = np.cos(phase) * carrier
+        sin_term = np.sin(phase) * carrier
 
-            sum_cos = 0
-            sum_sin = 0
-            gain = sum(weights[k*samples_per_cycle:k*samples_per_cycle+samples_per_cycle])
-            delta_t = (1/f1)/samples_per_cycle
-            for i in range(samples_per_cycle):
-                index = k*samples_per_cycle + i
-                sum_cos += weights[index] * np.cos(2*np.pi*f*(i*delta_t + times[k] - m*delta_t)) * np.exp(-1j*2*np.pi*f1*(i*delta_t + times[k] - m*delta_t))
-                sum_sin += weights[index] * np.sin(2*np.pi*f*(i*delta_t + times[k] - m*delta_t)) * np.exp(-1j*2*np.pi*f1*(i*delta_t + times[k] - m*delta_t))  
-            column_cos.append((2/gain)*sum_cos)
-            column_sin.append((2/gain)*sum_sin)
+        column_cos = (2 / gain) * np.sum(weights * cos_term, axis=1)
+        column_sin = (2 / gain) * np.sum(weights * sin_term, axis=1)
 
         columns.append(column_cos)
         columns.append(column_sin)
@@ -164,8 +168,6 @@ def solve(f1, fos, phasor, times, samples_per_cycle, m = 128/2):
     matrix_real = np.vstack((matrix.real, matrix.imag))
     phasor = np.array(phasor)
     phasor_real = np.concatenate((phasor.real, phasor.imag))
-
-
 
     x, residuals, rank, s = np.linalg.lstsq(matrix_real, phasor_real, rcond=None)
 
@@ -177,5 +179,7 @@ def solve(f1, fos, phasor, times, samples_per_cycle, m = 128/2):
         amplitudes.append(float(v))
         angles.append(float(np.degrees(theta)))
 
-    # calculated
     return amplitudes, angles
+
+
+# TODO: understand the vectorization

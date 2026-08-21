@@ -3,16 +3,21 @@ import './LandingScreen.css'
 function LandingScreen({ onBegin }) {
   return (
     <div className="landing">
+        
 
-      <h1 className="landing-headline">
-        OSLocator
-      </h1>
+      <h1 className="landing-headline">OSLocator</h1>
 
-      <p className="landing-sub">
-        Version 1.0
+      <p className="landing-tagline">
+        Power system oscillation source locator using interharmonics extracted from synchrophasor data
       </p>
 
-      <div className="landing-signature">
+      <div className="landing-meta">
+        <span>Version 1.0</span>
+        <span>Aug. 20, 2026</span>
+        <span>Copyright © Sophia Xu</span>
+      </div>
+
+      {/* <div className="landing-signature">
         <svg viewBox="0 0 800 140" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M 0 70 
@@ -38,34 +43,6 @@ function LandingScreen({ onBegin }) {
             strokeWidth="1.5"
           />
         </svg>
-        {/* <div className="landing-signature-caption">
-          <span>Combined signal, F1 ± fos</span>
-          <span>Beat period resolved</span>
-        </div> */}
-      </div>
-
-      {/* <div className="landing-features">
-        <div className="landing-feature">
-          <p className="landing-feature-label">Automatic Detection</p>
-          <p className="landing-feature-body">
-            Scans every location in the dataset and locks onto the strongest
-            genuine oscillation, filtering out transients.
-          </p>
-        </div>
-        <div className="landing-feature">
-          <p className="landing-feature-label">Per-Location Breakdown</p>
-          <p className="landing-feature-body">
-            View F1, IH1, and IH2 magnitude, angle, and power for any location
-            in the network, side by side.
-          </p>
-        </div>
-        <div className="landing-feature">
-          <p className="landing-feature-label">Exportable Results</p>
-          <p className="landing-feature-body">
-            Download the full voltage, current, and power breakdown as a
-            multi-sheet workbook.
-          </p>
-        </div>
       </div> */}
 
       <div className="landing-cta-row">

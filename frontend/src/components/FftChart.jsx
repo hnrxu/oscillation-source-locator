@@ -4,10 +4,10 @@ function FftChart({ fftData }) {
   if (!fftData) return null
 
   const BIN_LIMIT = 250
-  const chartData = fftData.frequencies.slice(0, BIN_LIMIT).map((freq, i) => ({
+  const chartData = fftData.frequencies.map((freq, i) => ({
     frequency: freq.toFixed(2),
     magnitude: fftData.magnitudes[i].toFixed(2)
-  })).filter(freq => freq >= 0.1)
+  })).filter(i => i.frequency >= 0.1).slice(0, BIN_LIMIT)
 
 
   // avoid a wall of unreadable x-axis labels when there are many bins
@@ -21,7 +21,7 @@ function FftChart({ fftData }) {
           fontSize: '13px',
           fontWeight: 500,
           color: 'var(--text)',
-          margin: '0 0 4px',
+          margin: '0 0 2px',
         }}
       >
         Location: {fftData.location}
@@ -29,8 +29,8 @@ function FftChart({ fftData }) {
       <p
         style={{
           fontFamily: 'var(--mono)',
-          fontSize: '11.5px',
-          color: 'var(--accent)',
+          fontSize: '13px',
+          color: 'var(--signature)',
           margin: '0 0 0px',
           fontWeight: 500,
         }}

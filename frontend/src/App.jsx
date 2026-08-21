@@ -17,7 +17,7 @@ function App() {
   const [started, setStarted] = useState(false)
   const [upload, setUpload] = useState(null)
   const [downloadUrl, setDownloadUrl] = useState(null)
-  const [timestamp, setTimestamp] = useState('middle')
+  const [timestamp, setTimestamp] = useState('50')
   const [numSamples, setNumSamples] = useState(32)
   const [startTime, setStartTime] = useState(0)
   const [endTime, setEndTime] = useState(null)
@@ -90,7 +90,7 @@ function App() {
             {/* <div className="app-mark">IH</div> */}
             <div className="app-title-group">
             <h1 className="app-title">OSLocator</h1>
-            <p className="app-subtitle">Upload a phasor dataset to detect the dominant oscillation and resolve its components.</p>
+            <p className="app-subtitle">Oscillation Source Locator</p>
             </div>
         </header>
 
@@ -141,9 +141,9 @@ function App() {
                 <div className="field">
                     <label className="field-label">Timestamp anchor</label>
                     <select value={timestamp} onChange={e => setTimestamp(e.target.value)}>
-                    <option value="start">Start</option>
-                    <option value="middle">Middle</option>
-                    <option value="end">End</option>
+                    <option value="0">0%</option>
+                    <option value="50">50%</option>
+                    <option value="100">100%</option>
                     </select>
                 </div>
 

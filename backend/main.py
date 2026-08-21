@@ -220,7 +220,7 @@ async def generate_output(websocket: WebSocket):
         params = await websocket.receive_json()
         contents = await websocket.receive_bytes()
 
-        timestamp = params.get('timestamp', 'middle')
+        timestamp = params.get('timestamp', '50')
         num_samples = safe_convert(params.get('num_samples'), int, config.NUM_SAMPLES)
         start_time = safe_convert(params.get('start_time'), float, config.T_START)
         end_time = safe_convert(params.get('end_time'), float, config.T_END)
@@ -230,9 +230,9 @@ async def generate_output(websocket: WebSocket):
 
 
         m = (num_samples - 1) / 2
-        if timestamp == 'start':
+        if timestamp == '0':
             m = 0
-        elif timestamp == 'end':
+        elif timestamp == '100':
             m = num_samples - 1
 
 
