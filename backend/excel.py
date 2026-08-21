@@ -140,7 +140,7 @@ def dict_to_df(output_dict):
     return df
 
 def params_to_df(params):
-    return pd.DataFrame([params])
+    return pd.DataFrame(list(params.items()), columns=['Parameter', 'Value'])
 
 def write_output(output_v, output_i, output_s, params):
     buffer = io.BytesIO()

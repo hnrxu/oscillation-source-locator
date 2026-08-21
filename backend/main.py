@@ -77,6 +77,12 @@ def process_location(cached_data,
         if j >= times[len(times)-1] // beat_period:
             break
 
+        if len(phasor_data) * 2 < config.MIN_NUM_DATA:
+            raise ValueError(
+                f"Not enough data to solve reliably. "
+                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period)."
+        )
+
 
 
 

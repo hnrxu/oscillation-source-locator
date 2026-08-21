@@ -8,6 +8,7 @@ import FftChart from './components/FftChart'
 import IhChart from './components/IhChart'
 import LandingScreen from './components/LandingScreen'
 import InfoButton from './components/InfoButton'
+import ParametersInfo from './components/ParamsInfo'
 
 function Spinner() {
   return <div className="spinner" />
@@ -124,7 +125,13 @@ function App() {
         </section>
 
         <section className="panel">
-            <h2 className="panel-title">Parameters</h2>
+            <h2 className="panel-title-centered">
+                <span className="title-text">Parameters</span>
+                <InfoButton title="Parameter Details" hasError={!!error}>
+                        <ParametersInfo />
+                        
+                </InfoButton>
+            </h2>
             <div className="param-grid">
 
 
@@ -217,3 +224,4 @@ function App() {
 }
 
 export default App
+

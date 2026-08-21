@@ -47,6 +47,9 @@ function LandingScreen({ onBegin }) {
 
       <div className="landing-cta-row">
         <button className="landing-cta" onClick={onBegin}>
+          About OSLocator
+        </button>
+        <button className="landing-cta" onClick={onBegin}>
           Begin Analysis
         </button>
       </div>
