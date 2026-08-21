@@ -2,6 +2,8 @@ import io
 import numpy as np
 import pandas as pd
 
+from backend.main import ValidationError
+
 
 def write_excel(times, magnitudes_v, angles_v, magnitudes_i, angles_i):
     #using temp var names, prob change later
@@ -73,7 +75,7 @@ def read_excel(df, start, t_start = 0, t_end = None):
     magnitudes_i = data.iloc[:, 3].astype(float).to_numpy()
     angles_i = data.iloc[:, 4].astype(float).to_numpy()
     if len(f1_col) == 0 or len(magnitudes_v) == 0 or len(angles_v) == 0 or len(magnitudes_i) == 0 or len(angles_i) == 0:
-        raise ValueError("No valid rows after cleaning data. Please check that data has no extra columns/unusual structure")
+        raise ValidationError("No valid rows after cleaning data. Please check that data has no extra columns/unusual structure.")
     
     return f1_col, magnitudes_v, magnitudes_i, angles_v, angles_i, times
 
@@ -92,25 +94,25 @@ def write_output_excel(output_dict, filename):
 
 def validate_structure(df):
     if df.shape[0] < 5:
-        raise ValueError("File has too few rows.")
+        raise ValidationError("File has too few rows.")
     if df.shape[1] < 6:
-        raise ValueError("File has too few columns.")
+        raise ValidationError("File has too few columns.")
     
     # verify column 0 is Time column
     time_header = df.iloc[0, 0]
     if pd.isna(time_header) or 'time' not in str(time_header).lower():
-        raise ValueError(f"Missing time column as column 1.")
+        raise ValidationError(f"Missing time column as column 1. Please check guidelines for supported data structure.")
 
     # checks if signals are correct
     signal_row = df.iloc[1]
     expected_signals = {'F', 'VM', 'VA', 'IM', 'IA'}
     actual_signals = set(signal_row.dropna().astype(str).unique())
     if not expected_signals.issubset(actual_signals):
-        raise ValueError(f"Unexpected column structure in row 2.")
+        raise ValidationError(f"Unexpected column structure in row 2. Please check guidelines for supported data structure.")
 
     data_cols = df.shape[1] - 1  # checks if data comes in sets of 5exluding time
     if data_cols % 5 != 0:
-        raise ValueError(f"Column count doesn't follow structure requirements.")
+        raise ValidationError(f"Column count doesn't follow structure requirements. Please check guidelines for supported data structure.")
     
     # check that data values are numeric
     data_rows = df.iloc[4:] 
@@ -121,7 +123,7 @@ def validate_structure(df):
         try:
             pd.to_numeric(col_values)
         except (ValueError, TypeError):
-            raise ValueError(f"Column {col} contains non-numeric values in its data rows.")
+            raise ValidationError(f"Column {col} contains non-numeric values in its data rows. Please check guidelines for supported data structure.")
 
     
 

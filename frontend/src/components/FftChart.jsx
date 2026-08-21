@@ -3,7 +3,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 function FftChart({ fftData }) {
   if (!fftData) return null
 
-  const BIN_LIMIT = 250
+  
+  const fosIndex = fftData.frequencies.findIndex(i => 
+    Math.abs(i - fftData.fos) < 0.01
+  )
+  console.log(fosIndex)
+  const BIN_LIMIT = fosIndex + 5
   const chartData = fftData.frequencies.map((freq, i) => ({
     frequency: freq.toFixed(2),
     magnitude: fftData.magnitudes[i].toFixed(2)

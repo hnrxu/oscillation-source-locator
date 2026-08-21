@@ -27,6 +27,10 @@ def health():
     return { 'status': 'ok' }
 
 
+class ValidationError(Exception):
+    pass
+
+
 def process_location(cached_data,
     i,
     beat_period,
@@ -78,9 +82,9 @@ def process_location(cached_data,
             break
 
         if len(phasor_data) * 2 < config.MIN_NUM_DATA:
-            raise ValueError(
+            raise ValidationError(
                 f"Not enough data to solve reliably. "
-                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period)."
+                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period."
         )
 
 
@@ -142,9 +146,9 @@ def process_location(cached_data,
             break
 
         if len(phasor_data) * 2 < config.MIN_NUM_DATA:
-            raise ValueError(
+            raise ValidationError(
                 f"Not enough data to solve reliably. "
-                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period)."
+                f"Need at least {config.MIN_NUM_DATA // 2} points per beat period."
             )
 
 
@@ -172,7 +176,7 @@ def process_location(cached_data,
 
     all_lists = [amps_f1_v, amps_ih1_v, amps_ih2_v, angs_f1_v, angs_ih1_v, angs_ih2_v, amps_f1_i, amps_ih1_i, amps_ih2_i, angs_f1_i, angs_ih1_i, angs_ih2_i]
     if any(len(lst) == 0 for lst in all_lists):
-        raise ValueError("Results are empty! Maybe not enough data provided")
+        raise ValidationError("Results are empty! Please check guidelines for supported data structure.")
     
     sf1, sih1, sih2, pf1, pih1, pih2, qf1, qih1, qih2 = calculate_power(amps_f1_v, amps_f1_i, angs_f1_v, angs_f1_i, 
                                                         amps_ih1_v, amps_ih1_i, angs_ih1_v, angs_ih1_i,
@@ -258,9 +262,15 @@ async def generate_output(websocket: WebSocket):
         # finding highest fos from all locations
         num_cycles, beat_period, best_mags, best_freqs, best_location = detect_max_fos(locations, cached_data)
 
+        if 1/beat_period > 30:
+            raise ValidationError(
+                'Detected fos exceeds the expected range of 20Hz. Please check that your data is valid for this solving method.'
+            )
+
         # send best oscillation segment to front
         best_index = locations.index(best_location)
         f1_freqs, phasor_mags_v, phasor_mags_i, phasor_angs_v, phasor_angs_i, times = cached_data[best_index]
+
 
         segment_data = {
             'time': times.tolist(),
@@ -275,7 +285,7 @@ async def generate_output(websocket: WebSocket):
         fft_data = {
             'frequencies': best_freqs.tolist(),
             'magnitudes': best_mags.tolist(),
-            'location': best_location,
+            'strongest oscillation location': best_location,
             'fos': 1/beat_period
         }
 
@@ -326,10 +336,10 @@ async def generate_output(websocket: WebSocket):
         await websocket.send_bytes(output_final.read())
    
 
-    except ValueError as e:
+    except ValidationError as e:
         await websocket.send_json({'type': 'error', 'message': str(e)})
     except Exception as e:
-        await websocket.send_json({'type': 'error', 'message': f'Unexpected error: {str(e)}'})
+        await websocket.send_json({'type': 'error', 'message': f'There was an error processing your results. Please check your data or parameters for unusual structure or values.'})
     finally:
         try:
             await websocket.close()
@@ -341,8 +351,7 @@ async def generate_output(websocket: WebSocket):
 
 
 # uvicorn main:app --reload
-# test exceptions:
-# not enough data/beat period
+# test exceptions
             
 
 

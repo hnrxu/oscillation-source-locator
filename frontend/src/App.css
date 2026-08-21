@@ -479,3 +479,30 @@ body {
 .modal-link:hover {
   background: #8fb6d6;
 }
+
+
+.upload-btn {
+  display: inline-block;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 7px 13px;
+  margin-right: 14px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.upload-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-raised);
+}
+
+.upload-filename {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--text-dim);
+}

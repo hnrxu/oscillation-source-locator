@@ -61,6 +61,9 @@ function App() {
         const response = JSON.parse(event.data)
         if (response.type === 'error') {
           setError(response.message) 
+          setSegmentData(null)
+          setFftData(null)
+          setIhData(null)
           setProcessing(false) 
         } else if (response.type === 'segment_chart') {
           setSegmentData(response.data)
@@ -110,16 +113,24 @@ function App() {
             </h2>
      
             <div className="upload-zone">
-            <input
-                type="file"
-                accept=".xlsx"
-                onChange={e => { setUpload(e.target.files[0]); setError(null) }}
-            />
+                <input
+                    type="file"
+                    id="file-upload"
+                    accept=".xlsx"
+                    onChange={e => { setUpload(e.target.files[0]); setError(null) }}
+                    style={{ display: 'none' }}
+                />
+                <label htmlFor="file-upload" className="upload-btn">
+                    Upload synchrophasor dataset 
+                </label>
+                <span className="upload-filename">
+                    {upload ? upload.name : 'No file selected'}
+                </span>
             </div>
             {error && (
                 <div className="error-banner">
                     <div className="error-banner-icon">!</div>
-                    <p className="error-banner-text">{error} Please check guidelines for supported data structure. </p>
+                    <p className="error-banner-text">{error} </p>
                 </div>
             )}
         </section>
@@ -137,12 +148,12 @@ function App() {
 
                 <div className="field">
                     <label className="field-label">Start time</label>
-                    <input type="number" value={startTime} placeholder={'Default: 0'} onChange={e => { setStartTime(e.target.value) }} />
+                    <input type="number" value={startTime} placeholder={'Default: All data'} onChange={e => { setStartTime(e.target.value) }} />
                 </div>
 
                 <div className="field">
                     <label className="field-label">End time</label>
-                    <input type="number" value={endTime ?? ''} placeholder={'Default: None'} onChange={e => setEndTime(e.target.value)} />
+                    <input type="number" value={endTime ?? ''} placeholder={'Default: All data'} onChange={e => setEndTime(e.target.value)} />
                 </div>
 
                 <div className="field">
@@ -162,7 +173,7 @@ function App() {
             </div>
 
             <div className="submit-row">
-            <button className="submit-btn" onClick={() => { uploadData(); setDownloadUrl(null) }} disabled={!upload}>
+            <button className="submit-btn" onClick={() => { uploadData(); setDownloadUrl(null); setError(null) }} disabled={!upload}>
                 Submit Data
             </button>
             </div>
