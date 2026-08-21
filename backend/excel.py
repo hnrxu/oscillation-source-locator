@@ -2,7 +2,7 @@ import io
 import numpy as np
 import pandas as pd
 
-from backend.main import ValidationError
+from exceptions import ValidationError
 
 
 def write_excel(times, magnitudes_v, angles_v, magnitudes_i, angles_i):

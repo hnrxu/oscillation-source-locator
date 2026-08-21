@@ -20,7 +20,7 @@ function App() {
   const [downloadUrl, setDownloadUrl] = useState(null)
   const [timestamp, setTimestamp] = useState('50')
   const [numSamples, setNumSamples] = useState(32)
-  const [startTime, setStartTime] = useState(0)
+  const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
   const [segmentData, setSegmentData] = useState(null)
   const [fftData, setFftData] = useState(null)

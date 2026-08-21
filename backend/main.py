@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
+from exceptions import ValidationError
 from excel import read_excel, read_locations, validate_structure, write_output, write_output_excel
 from solver import detect_max_fos, solve
 from utils import calculate_power, convert_to_phasor, safe_convert
@@ -27,8 +28,6 @@ def health():
     return { 'status': 'ok' }
 
 
-class ValidationError(Exception):
-    pass
 
 
 def process_location(cached_data,
