@@ -46,7 +46,7 @@ function LandingScreen({ onBegin }) {
       </div> */}
 
       <div className="landing-cta-row">
-        <button className="landing-cta" onClick={onBegin}>
+        <button className="landing-cta" >
           About OSLocator
         </button>
         <button className="landing-cta" onClick={onBegin}>

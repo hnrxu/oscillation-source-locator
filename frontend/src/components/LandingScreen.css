@@ -3,19 +3,30 @@
    ========================================================================== */
 
 .landing {
-  max-width: 900px;
+  min-height: 100vh;
   width: 100%;
-  margin: 0 auto;
-  position: fixed;
-  top: 30%;
-  left: 20%;
+  margin: 0;
+  padding: 48px 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background-image: url('../assets/landing-bg.png');
+  /* background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; */
+}
+.landing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #e5e8ebbf;   /* adjust color/opacity to taste */
+  z-index: 0;
+}
 
-  
-
+.landing > * {
+  position: relative;
+  z-index: 1;   /* keeps your actual content above the fade overlay */
 }
 
 .landing-eyebrow {
@@ -169,7 +180,7 @@
 
 .landing-headline {
   font-family: var(--mono);
-  font-size: 50;
+  font-size: 50px;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text);

@@ -34,6 +34,7 @@ function App() {
   // TODO: test what happens during exceptions
 
   const uploadData = async () => {
+
     if (!upload) {
       console.error('no input selected')
       return
@@ -138,7 +139,7 @@ function App() {
         <section className="panel">
             <h2 className="panel-title-centered">
                 <span className="title-text">Parameters</span>
-                <InfoButton title="Parameter Details" hasError={!!error}>
+                <InfoButton title="Parameter Details" >
                         <ParametersInfo />
                         
                 </InfoButton>
@@ -148,12 +149,12 @@ function App() {
 
                 <div className="field">
                     <label className="field-label">Start time</label>
-                    <input type="number" value={startTime} placeholder={'Default: All data'} onChange={e => { setStartTime(e.target.value) }} />
+                    <input type="number" value={startTime ?? ''} placeholder={'Default: All data'} onChange={e => {setStartTime(e.target.value);}} />
                 </div>
 
                 <div className="field">
                     <label className="field-label">End time</label>
-                    <input type="number" value={endTime ?? ''} placeholder={'Default: All data'} onChange={e => setEndTime(e.target.value)} />
+                    <input type="number" value={endTime ?? ''} placeholder={'Default: All data'} onChange={e => {setEndTime(e.target.value);}} />
                 </div>
 
                 <div className="field">
@@ -167,11 +168,11 @@ function App() {
 
                 <div className="field">
                     <label className="field-label">Sampling rate</label>
-                    <input type="number" value={numSamples} placeholder={'Default: 32'} onChange={e => { setNumSamples(e.target.value) }} />
+                    <input type="number" value={numSamples} placeholder={'Default: 32'} onChange={e => { setNumSamples(e.target.value);}} />
                 </div>
 
             </div>
-
+ 
             <div className="submit-row">
             <button className="submit-btn" onClick={() => { uploadData(); setDownloadUrl(null); setError(null) }} disabled={!upload}>
                 Submit Data

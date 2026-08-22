@@ -2,18 +2,15 @@ function ParametersInfo() {
   return (
     <>
       <strong>Start time / End time</strong> — restrict analysis to a specific
-      window of the recording. Leave End time blank to use the rest of the file.
+      window of the recording. Leave blank to use the whole file.
       <br /><br />
 
-      <strong>Timestamp anchor</strong> — where in each sample window the
-      reported timestamp falls: at the <em>start</em>, <em>middle</em>, or{' '}
-      <em>end</em> of the sampling interval. This depends on your PMU or data
-      source's convention — if results look off, try a different setting.
+      <strong>Timestamp anchor</strong> — where in each phasor data point the
+      reported timestamp falls: at the <em>start (0%) </em>, <em>middle (50%) </em>, or{' '}
+      <em>end (100%)</em> of the sampling interval.
       <br /><br />
 
-      <strong>Sampling rate</strong> — the number of samples per power cycle
-      in your data. This should match how the file was originally recorded;
-      an incorrect value can noticeably affect the interharmonic results.
+      <strong>Sampling rate</strong> — the number of samples taken to generate each phasor data point.
     </>
   )
 }
