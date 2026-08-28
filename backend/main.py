@@ -74,14 +74,14 @@ def process_location(cached_data,
             if j-temp >= config.MAX_PERIODS_PER_CALC:
                 break
 
-            if j+1 < times[len(times)-1] // beat_period:
+            if j+1 < window_duration // beat_period:
                 j += 1
-                phasor_end_idx = np.argmin(np.abs(j*beat_period+beat_period - times))
+                phasor_end_idx = np.argmin(np.abs(window_start + j*beat_period+beat_period - times))
                 phasor_data = phasor_v[phasor_start_idx: phasor_end_idx]
             else:
                 break
         
-        if j >= times[len(times)-1] // beat_period:
+        if j >= window_duration // beat_period:
             break
 
         if len(phasor_data) * 2 < config.MIN_NUM_DATA:
@@ -138,14 +138,14 @@ def process_location(cached_data,
             if j-temp >= config.MAX_PERIODS_PER_CALC:
                 break
             
-            if j+1 < times[len(times)-1] // beat_period:
+            if j+1 < window_duration // beat_period:
                 j += 1
-                phasor_end_idx = np.argmin(np.abs(j*beat_period+beat_period - times))
+                phasor_end_idx = np.argmin(np.abs(window_start + j*beat_period+beat_period - times))
                 phasor_data = phasor_i[phasor_start_idx: phasor_end_idx]
             else:
                 break
         
-        if j >= times[len(times)-1] // beat_period:
+        if j >= window_duration // beat_period:
             break
 
         if len(phasor_data) * 2 < config.MIN_NUM_DATA:

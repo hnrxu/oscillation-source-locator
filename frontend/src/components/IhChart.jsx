@@ -55,7 +55,7 @@ function IhChart({ ihData }) {
     const values = locationData[fieldKey]
     const times = locationData['Time']
 
-    return times.map((t, i) => ({ time: t.toFixed(2), value: values[i].toFixed(2) }))
+    return times.map((t, i) => ({ time: t.toFixed(0), value: values[i].toFixed(2) }))
   }
 
   const chartData = getChartData()
