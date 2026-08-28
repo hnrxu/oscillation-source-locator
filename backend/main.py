@@ -56,10 +56,14 @@ def process_location(cached_data,
     angs_ih2_v = []
 
     j = 0
-    while j < (times[len(times)-1] // beat_period):
+
+    window_start = times[0]
+    window_duration = times[-1] - window_start
+
+    while j < (window_duration // beat_period):
         
-        phasor_start_idx = np.argmin(np.abs(j*beat_period - times))
-        phasor_end_idx = np.argmin(np.abs(j*beat_period+beat_period - times))
+        phasor_start_idx = np.argmin(np.abs(window_start + j*beat_period - times))
+        phasor_end_idx = np.argmin(np.abs(window_start + j*beat_period+beat_period - times))
 
         phasor_data = phasor_v[phasor_start_idx: phasor_end_idx]
 
@@ -120,10 +124,10 @@ def process_location(cached_data,
 
 
     j = 0
-    while j < (times[len(times)-1] // beat_period):
+    while j < (window_duration // beat_period):
         
-        phasor_start_idx = np.argmin(np.abs(j*beat_period - times))
-        phasor_end_idx = np.argmin(np.abs(j*beat_period+beat_period - times))
+        phasor_start_idx = np.argmin(np.abs(window_start + j*beat_period - times))
+        phasor_end_idx = np.argmin(np.abs(window_start + j*beat_period+beat_period - times))
 
         phasor_data = phasor_i[phasor_start_idx: phasor_end_idx]
 
