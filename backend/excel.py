@@ -100,7 +100,7 @@ def validate_structure(df):
     
     # verify column 0 is Time column
     time_header = df.iloc[0, 0]
-    if pd.isna(time_header) or 'time' not in str(time_header).lower():
+    if pd.isna(time_header):
         raise ValidationError(f"Missing time column as column 1. Please check guidelines for supported data structure.")
 
     # checks if signals are correct

@@ -11,6 +11,11 @@ function SegmentChart({ segmentData }) {
   // avoid a wall of unreadable x-axis labels when there are many bins
   const tickInterval = Math.max(0, Math.floor(chartData.length / 12) - 1)
 
+  const maxValue = chartData.length > 0 
+    ? Math.max(...chartData.map(i => Math.abs(parseFloat(i.value))))
+    : 0
+  const yAxisWidth = Math.max(35, String(Math.round(maxValue)).length * 8 + 30)
+
   return (
     <div>
     <h3
@@ -46,7 +51,7 @@ function SegmentChart({ segmentData }) {
           axisLine={{ stroke: 'var(--border-strong)' }}
           tickLine={{ stroke: 'var(--border-strong)' }}
           domain={['dataMin', 'dataMax']}
-          width={44}
+          width={yAxisWidth}
           label={{
             value: 'Voltage',
             angle: -90,

@@ -55,10 +55,15 @@ function IhChart({ ihData }) {
     const values = locationData[fieldKey]
     const times = locationData['Time']
 
-    return times.map((t, i) => ({ time: t.toFixed(0), value: values[i].toFixed(2) }))
+    return times.map((t, i) => ({ time: t.toFixed(2), value: values[i].toFixed(2) }))
   }
 
   const chartData = getChartData()
+
+  const maxValue = chartData.length > 0 
+    ? Math.max(...chartData.map(i => Math.abs(parseFloat(i.value))))
+    : 0
+  const yAxisWidth = Math.max(35, String(Math.round(maxValue)).length * 8 + 15)
 
   const signalChange = (value) => {
     const wasVoltageOrCurrent = signal === 'Voltage' || signal === 'Current'
@@ -157,7 +162,8 @@ function IhChart({ ihData }) {
             axisLine={{ stroke: 'var(--border-strong)' }}
             tickLine={{ stroke: 'var(--border-strong)' }}
             domain={['dataMin', 'dataMax']}
-            width={44}
+            width={yAxisWidth}
+            tickFormatter={(value) => value.toFixed(0)}
             label={{
               value: dataType,
               angle: -90,
